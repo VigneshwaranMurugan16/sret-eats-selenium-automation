@@ -268,14 +268,14 @@ Edit `testng-parallel.xml`:
 ```
 ## 📸 Screenshots
 Test Execution
-![img.png](img.png)
+![img.png](readme_images/img.png)
 
 Extent Report Dashboard
-![img_2.png](img_2.png)
-![img_3.png](img_3.png)
-![img_4.png](img_4.png)
-![img_5.png](img_5.png)
-![img_6.png](img_6.png)
+![img_2.png](readme_images/img_2.png)
+![img_3.png](readme_images/img_3.png)
+![img_4.png](readme_images/img_4.png)
+![img_5.png](readme_images/img_5.png)
+![img_6.png](readme_images/img_6.png)
 
 # 🤝 Contributors
 Vigneshwaran Murugan - https://github.com/VigneshwaranMurugan16

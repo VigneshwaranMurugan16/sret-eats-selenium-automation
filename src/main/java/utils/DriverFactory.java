@@ -16,19 +16,20 @@ public class DriverFactory {
     // ThreadLocal to support parallel execution
     private static ThreadLocal<WebDriver> driver = new ThreadLocal<>();
 
-    public static WebDriver getDriver() {
+    public static WebDriver getDriver(String browser) {
         if (driver.get() == null) {
-            driver.set(createDriver());
+            driver.set(createDriver(browser));
         }
         return driver.get();
     }
 
-    private static WebDriver createDriver() {
-        String browser = ConfigReader.getBrowser();
+    private static WebDriver createDriver(String browser) {
+        System.out.println("🔍 DriverFactory creating browser: " + browser);
         WebDriver webDriver = null;
 
         switch (browser.toLowerCase()) {
             case "chrome":
+                System.out.println("✅ Creating Chrome browser");
                 WebDriverManager.chromedriver().setup();
                 ChromeOptions chromeOptions = new ChromeOptions();
                 chromeOptions.addArguments("--start-maximized");
@@ -38,6 +39,7 @@ public class DriverFactory {
                 break;
 
             case "firefox":
+                System.out.println("✅ Creating Firefox browser");
                 WebDriverManager.firefoxdriver().setup();
                 FirefoxOptions firefoxOptions = new FirefoxOptions();
                 firefoxOptions.addArguments("--start-maximized");
@@ -45,9 +47,12 @@ public class DriverFactory {
                 break;
 
             case "edge":
-                WebDriverManager.edgedriver().setup();
+                System.out.println("✅ Creating Edge browser");
+                // Use manual path for Edge
+                System.setProperty("webdriver.edge.driver", "C:\\WebDrivers\\msedgedriver.exe");
                 EdgeOptions edgeOptions = new EdgeOptions();
                 edgeOptions.addArguments("--start-maximized");
+                edgeOptions.addArguments("--disable-notifications");
                 webDriver = new EdgeDriver(edgeOptions);
                 break;
 
