@@ -21,10 +21,18 @@ public class BasePage {
     }
 
     // Click element with wait
+// Click element with wait
     protected void clickElement(WebElement element) {
         wait.until(ExpectedConditions.elementToBeClickable(element));
-        element.click();
+        try {
+            element.click();
+        } catch (Exception e) {
+            // If regular click fails, try JavaScript click
+            JavascriptExecutor js = (JavascriptExecutor) driver;
+            js.executeScript("arguments[0].click();", element);
+        }
     }
+
 
     // Enter text with clear and wait
     protected void enterText(WebElement element, String text) {

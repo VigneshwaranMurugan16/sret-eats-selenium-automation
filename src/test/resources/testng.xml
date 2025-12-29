@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="FoodOrderingTestSuite" verbose="1">
+
+    <!-- Single browser test execution -->
+    <test name="Chrome Tests" preserve-order="true">
+        <parameter name="browser" value="chrome"/>
+        <classes>
+            <class name="tests.LoginTest"/>
+            <class name="tests.HomePageTest"/>
+        </classes>
+    </test>
+
+</suite>

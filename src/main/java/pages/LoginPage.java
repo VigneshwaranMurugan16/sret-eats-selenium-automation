@@ -6,24 +6,21 @@ import org.openqa.selenium.support.FindBy;
 
 public class LoginPage extends BasePage {
 
-    // Locators using @FindBy annotation
+    // Locators - Updated to match your React app
     @FindBy(id = "email")
     private WebElement emailField;
 
     @FindBy(id = "password")
     private WebElement passwordField;
 
-    @FindBy(xpath = "//button[@type='submit' or contains(text(),'Login') or contains(text(),'Sign In')]")
+    @FindBy(xpath = "//button[contains(text(),'Sign in')]")
     private WebElement loginButton;
 
-    @FindBy(xpath = "//a[contains(text(),'Sign Up') or contains(text(),'Register')]")
+    @FindBy(xpath = "//a[contains(text(),'Sign up')]")
     private WebElement signUpLink;
 
     @FindBy(xpath = "//div[contains(@class,'error') or contains(@class,'alert')]")
     private WebElement errorMessage;
-
-    @FindBy(xpath = "//a[contains(text(),'Forgot Password')]")
-    private WebElement forgotPasswordLink;
 
     // Constructor
     public LoginPage(WebDriver driver) {
@@ -52,10 +49,6 @@ public class LoginPage extends BasePage {
 
     public void clickSignUpLink() {
         clickElement(signUpLink);
-    }
-
-    public void clickForgotPassword() {
-        clickElement(forgotPasswordLink);
     }
 
     public String getErrorMessage() {
