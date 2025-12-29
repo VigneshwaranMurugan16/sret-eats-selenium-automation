@@ -33,6 +33,12 @@ public class ConfigReader {
     }
 
     public static String getBrowser() {
+        // Check if browser is set via system property (for parallel execution)
+        String browser = System.getProperty("browser");
+        if (browser != null && !browser.isEmpty()) {
+            return browser;
+        }
+        // Otherwise read from config file
         return getProperty("browser");
     }
 

@@ -13,6 +13,7 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import java.time.Duration;
 
 public class DriverFactory {
+    // ThreadLocal to support parallel execution
     private static ThreadLocal<WebDriver> driver = new ThreadLocal<>();
 
     public static WebDriver getDriver() {
@@ -23,48 +24,40 @@ public class DriverFactory {
     }
 
     private static WebDriver createDriver() {
-        WebDriver webDriver;
-        String browser = ConfigReader.getBrowser().toLowerCase();
-        boolean headless = ConfigReader.isHeadless();
+        String browser = ConfigReader.getBrowser();
+        WebDriver webDriver = null;
 
-        switch (browser) {
+        switch (browser.toLowerCase()) {
             case "chrome":
                 WebDriverManager.chromedriver().setup();
                 ChromeOptions chromeOptions = new ChromeOptions();
-                if (headless) {
-                    chromeOptions.addArguments("--headless=new");
-                }
                 chromeOptions.addArguments("--start-maximized");
                 chromeOptions.addArguments("--disable-notifications");
+                chromeOptions.addArguments("--disable-popup-blocking");
                 webDriver = new ChromeDriver(chromeOptions);
                 break;
 
             case "firefox":
                 WebDriverManager.firefoxdriver().setup();
                 FirefoxOptions firefoxOptions = new FirefoxOptions();
-                if (headless) {
-                    firefoxOptions.addArguments("--headless");
-                }
+                firefoxOptions.addArguments("--start-maximized");
                 webDriver = new FirefoxDriver(firefoxOptions);
                 break;
 
             case "edge":
                 WebDriverManager.edgedriver().setup();
                 EdgeOptions edgeOptions = new EdgeOptions();
-                if (headless) {
-                    edgeOptions.addArguments("--headless");
-                }
                 edgeOptions.addArguments("--start-maximized");
                 webDriver = new EdgeDriver(edgeOptions);
                 break;
 
             default:
-                throw new IllegalArgumentException("Browser '" + browser + "' not supported. Use chrome, firefox, or edge.");
+                throw new IllegalArgumentException("Browser not supported: " + browser);
         }
 
-        // Set timeouts
-        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(ConfigReader.getImplicitWait()));
-        webDriver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+        // Set implicit wait and maximize
+        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        webDriver.manage().window().maximize();
 
         // Navigate to base URL
         webDriver.get(ConfigReader.getBaseUrl());
