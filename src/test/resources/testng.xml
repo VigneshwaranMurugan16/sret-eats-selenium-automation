@@ -2,6 +2,11 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
 <suite name="FoodOrderingTestSuite" verbose="1">
 
+    <!-- Add Extent Report Listener -->
+    <listeners>
+        <listener class-name="base.ExtentTestListener"/>
+    </listeners>
+
     <!-- All Tests -->
     <test name="Complete Test Suite" preserve-order="true">
         <parameter name="browser" value="chrome"/>

@@ -6,7 +6,7 @@ import org.testng.annotations.BeforeMethod;
 import utils.DriverFactory;
 
 public class BaseTest {
-    protected WebDriver driver;
+    public WebDriver driver; // Changed to public so listener can access it
 
     @BeforeMethod
     public void setUp() {
