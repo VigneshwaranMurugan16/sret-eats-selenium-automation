@@ -10,32 +10,23 @@ import java.util.List;
 public class CartPage extends BasePage {
 
     // Locators
-    @FindBy(xpath = "//div[contains(@class,'cart-item')]")
+    @FindBy(xpath = "//div[@class='cart-items']//li")
     private List<WebElement> cartItems;
 
-    @FindBy(xpath = "//button[contains(text(),'Proceed to Checkout') or contains(text(),'Checkout')]")
-    private WebElement checkoutButton;
+    @FindBy(className = "checkout-button")
+    private WebElement placeOrderButton;
 
-    @FindBy(xpath = "//span[contains(@class,'total') or contains(@class,'price-total')]")
-    private WebElement totalPrice;
+    @FindBy(className = "total")
+    private WebElement totalPriceElement;
 
-    @FindBy(xpath = "//button[contains(text(),'Remove') or contains(@class,'remove')]")
+    @FindBy(className = "remove-icon")
     private List<WebElement> removeButtons;
 
-    @FindBy(xpath = "//button[contains(text(),'+') or contains(@class,'increment')]")
-    private List<WebElement> incrementButtons;
+    @FindBy(className = "item-name")
+    private List<WebElement> itemNames;
 
-    @FindBy(xpath = "//button[contains(text(),'-') or contains(@class,'decrement')]")
-    private List<WebElement> decrementButtons;
-
-    @FindBy(xpath = "//input[contains(@class,'promo') or @placeholder='Promo Code']")
-    private WebElement promoCodeInput;
-
-    @FindBy(xpath = "//button[contains(text(),'Apply') and contains(@class,'promo')]")
-    private WebElement applyPromoButton;
-
-    @FindBy(xpath = "//p[contains(text(),'empty') or contains(text(),'no items')]")
-    private WebElement emptyCartMessage;
+    @FindBy(xpath = "//h2[contains(text(),'Your Cart')]")
+    private WebElement cartHeader;
 
     // Constructor
     public CartPage(WebDriver driver) {
@@ -47,48 +38,45 @@ public class CartPage extends BasePage {
         return cartItems.size();
     }
 
-    public void clickCheckoutButton() {
-        clickElement(checkoutButton);
+    public boolean isCartHeaderDisplayed() {
+        return isElementDisplayed(cartHeader);
+    }
+
+    public void clickPlaceOrder() {
+        scrollToElement(placeOrderButton);
+        clickElement(placeOrderButton);
+        System.out.println("✓ Clicked 'Place Order' button");
     }
 
     public String getTotalPrice() {
-        return getElementText(totalPrice);
+        return getElementText(totalPriceElement);
+    }
+
+    public boolean isItemInCart(String itemName) {
+        for (WebElement nameElement : itemNames) {
+            if (nameElement.getText().equalsIgnoreCase(itemName)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void removeFirstItem() {
         if (!removeButtons.isEmpty()) {
             clickElement(removeButtons.get(0));
+            System.out.println("✓ Removed first item from cart");
         }
     }
 
-    public void incrementFirstItemQuantity() {
-        if (!incrementButtons.isEmpty()) {
-            clickElement(incrementButtons.get(0));
+    public boolean isPlaceOrderButtonDisplayed() {
+        return isElementDisplayed(placeOrderButton);
+    }
+
+    public List<String> getAllItemNames() {
+        java.util.ArrayList<String> names = new java.util.ArrayList<>();
+        for (WebElement nameElement : itemNames) {
+            names.add(nameElement.getText());
         }
-    }
-
-    public void decrementFirstItemQuantity() {
-        if (!decrementButtons.isEmpty()) {
-            clickElement(decrementButtons.get(0));
-        }
-    }
-
-    public void applyPromoCode(String promoCode) {
-        enterText(promoCodeInput, promoCode);
-        clickElement(applyPromoButton);
-    }
-
-    public boolean isCartEmpty() {
-        return isElementDisplayed(emptyCartMessage);
-    }
-
-    public boolean isCheckoutButtonDisplayed() {
-        return isElementDisplayed(checkoutButton);
-    }
-
-    public void removeItemByName(String itemName) {
-        String xpath = "//div[contains(text(),'" + itemName + "')]/ancestor::div[contains(@class,'cart-item')]//button[contains(text(),'Remove')]";
-        WebElement removeBtn = driver.findElement(By.xpath(xpath));
-        clickElement(removeBtn);
+        return names;
     }
 }

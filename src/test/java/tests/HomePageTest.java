@@ -71,16 +71,16 @@ public class HomePageTest extends BaseTest {
         }
     }
 
-    @Test(priority = 4, description = "Verify search functionality")
-    public void testSearchBox() {
-        try {
-            homePage.searchItem("Pizza");
-            System.out.println("Search text entered: Pizza");
-            Assert.assertTrue(true, "Search box should accept input");
-            System.out.println("✓ Search box test passed");
-        } catch (Exception e) {
-            System.out.println("⚠ Search box not found on this page");
-            Assert.assertTrue(true, "Test passed - search box optional");
-        }
-    }
+//    @Test(priority = 4, description = "Verify search functionality")
+//    public void testSearchBox() {
+//        try {
+//            homePage.searchItem("Pizza");
+//            System.out.println("Search text entered: Pizza");
+//            Assert.assertTrue(true, "Search box should accept input");
+//            System.out.println("✓ Search box test passed");
+//        } catch (Exception e) {
+//            System.out.println("⚠ Search box not found on this page");
+//            Assert.assertTrue(true, "Test passed - search box optional");
+//        }
+//    }
 }

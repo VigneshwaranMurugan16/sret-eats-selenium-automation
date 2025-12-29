@@ -10,26 +10,23 @@ import java.util.List;
 public class MenuPage extends BasePage {
 
     // Locators
-    @FindBy(xpath = "//div[contains(@class,'food-item') or contains(@class,'menu-item')]")
-    private List<WebElement> foodItems;
+    @FindBy(className = "snack-card")
+    private List<WebElement> snackCards;
 
-    @FindBy(xpath = "//select[@id='category' or contains(@name,'category')]")
-    private WebElement categoryFilter;
-
-    @FindBy(xpath = "//button[contains(text(),'Add to Cart')]")
+    @FindBy(className = "cart-button")
     private List<WebElement> addToCartButtons;
 
-    @FindBy(xpath = "//input[@type='search' or @placeholder='Search food']")
-    private WebElement searchBox;
+    @FindBy(className = "fav-button")
+    private List<WebElement> addToFavButtons;
 
-    @FindBy(xpath = "//button[contains(text(),'Veg') or @id='veg-filter']")
-    private WebElement vegFilterButton;
+    @FindBy(xpath = "//a[contains(text(),'Cart')]")
+    private WebElement cartNavLink;
 
-    @FindBy(xpath = "//button[contains(text(),'Non-Veg') or @id='non-veg-filter']")
-    private WebElement nonVegFilterButton;
+    @FindBy(xpath = "//a[contains(text(),'Menu')]")
+    private WebElement menuNavLink;
 
-    @FindBy(xpath = "//select[contains(@name,'sort') or @id='sort']")
-    private WebElement sortDropdown;
+    @FindBy(xpath = "//a[contains(text(),'Orders')]")
+    private WebElement ordersNavLink;
 
     // Constructor
     public MenuPage(WebDriver driver) {
@@ -37,45 +34,80 @@ public class MenuPage extends BasePage {
     }
 
     // Page Actions
-    public int getFoodItemsCount() {
-        return foodItems.size();
+    public int getSnackCardsCount() {
+        return snackCards.size();
     }
 
-    public void searchFood(String foodName) {
-        enterText(searchBox, foodName);
+    public String getFirstSnackName() {
+        if (!snackCards.isEmpty()) {
+            WebElement firstCard = snackCards.get(0);
+            WebElement nameElement = firstCard.findElement(By.className("snack-name"));
+            return nameElement.getText();
+        }
+        return "";
     }
 
-    public void clickVegFilter() {
-        clickElement(vegFilterButton);
-    }
-
-    public void clickNonVegFilter() {
-        clickElement(nonVegFilterButton);
+    public String getFirstSnackPrice() {
+        if (!snackCards.isEmpty()) {
+            WebElement firstCard = snackCards.get(0);
+            WebElement priceElement = firstCard.findElement(By.className("PriceName"));
+            return priceElement.getText();
+        }
+        return "";
     }
 
     public void addFirstItemToCart() {
         if (!addToCartButtons.isEmpty()) {
+            scrollToElement(addToCartButtons.get(0));
             clickElement(addToCartButtons.get(0));
+            System.out.println("✓ Clicked 'Add to Cart' on first item");
         }
     }
 
     public void addItemToCartByName(String itemName) {
-        // Dynamic XPath to find specific item and click its Add to Cart button
-        String xpath = "//div[contains(text(),'" + itemName + "')]/ancestor::div[contains(@class,'item')]//button[contains(text(),'Add to Cart')]";
-        WebElement addButton = driver.findElement(By.xpath(xpath));
-        clickElement(addButton);
-    }
-
-    public boolean isFoodItemDisplayed(String itemName) {
-        try {
-            WebElement item = driver.findElement(By.xpath("//div[contains(text(),'" + itemName + "')]"));
-            return item.isDisplayed();
-        } catch (Exception e) {
-            return false;
+        for (WebElement card : snackCards) {
+            try {
+                WebElement nameElement = card.findElement(By.className("snack-name"));
+                if (nameElement.getText().equalsIgnoreCase(itemName)) {
+                    WebElement cartButton = card.findElement(By.className("cart-button"));
+                    scrollToElement(cartButton);
+                    clickElement(cartButton);
+                    System.out.println("✓ Added '" + itemName + "' to cart");
+                    return;
+                }
+            } catch (Exception e) {
+                continue;
+            }
         }
+        System.out.println("⚠ Item '" + itemName + "' not found");
     }
 
-    public List<WebElement> getAllFoodItems() {
-        return foodItems;
+    public void navigateToCart() {
+        clickElement(cartNavLink);
+        System.out.println("✓ Navigated to Cart");
+    }
+
+    public void navigateToMenu() {
+        clickElement(menuNavLink);
+        System.out.println("✓ Navigated to Menu");
+    }
+
+    public void navigateToOrders() {
+        clickElement(ordersNavLink);
+        System.out.println("✓ Navigated to Orders");
+    }
+
+    public boolean isSnackDisplayed(String snackName) {
+        for (WebElement card : snackCards) {
+            try {
+                WebElement nameElement = card.findElement(By.className("snack-name"));
+                if (nameElement.getText().equalsIgnoreCase(snackName)) {
+                    return true;
+                }
+            } catch (Exception e) {
+                continue;
+            }
+        }
+        return false;
     }
 }
